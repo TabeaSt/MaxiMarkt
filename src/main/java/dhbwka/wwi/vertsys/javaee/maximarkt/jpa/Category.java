@@ -42,6 +42,9 @@ public class Category implements Serializable {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     List<Task> tasks = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    List<Anzeige> anzeige = new ArrayList<>();
 
     //<editor-fold defaultstate="collapsed" desc="Konstruktoren">
     public Category() {

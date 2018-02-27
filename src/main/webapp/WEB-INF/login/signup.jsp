@@ -63,7 +63,7 @@
                     </div>
                     
                     <label for="signup_vorname">
-                        vorname:
+                        Vorname:
                         <span class="required">*</span>
                     </label>
                     <div class="side-by-side">
@@ -71,7 +71,7 @@
                     </div>
                     
                      <label for="signup_nachname">
-                        nachname:
+                        Nachname:
                         <span class="required">*</span>
                     </label>
                     <div class="side-by-side">
@@ -79,7 +79,7 @@
                     </div>
                     
                      <label for="signup_anschrift">
-                        anschrift:
+                        Anschrift:
                         <span class="required">*</span>
                     </label>
                     <div class="side-by-side">
@@ -87,7 +87,7 @@
                     </div>
                     
                      <label for="signup_plz">
-                        plz
+                        Postleitzahl:
                         <span class="required">*</span>
                     </label>
                     <div class="side-by-side">
@@ -103,7 +103,7 @@
                     </div>
                     
                      <label for="signup_email">
-                        mail:
+                        Mail:
                         <span class="required">*</span>
                     </label>
                     <div class="side-by-side">
@@ -111,7 +111,7 @@
                     </div>
                     
                      <label for="signup_tel">
-                        tel:
+                        Telefonnummer:
                         <span class="required">*</span>
                     </label>
                     <div class="side-by-side">

@@ -1,12 +1,3 @@
-<%-- 
-    Copyright © 2018 Dennis Schulmeister-Zimolong
-
-    E-Mail: dhbw@windows3.de
-    Webseite: https://www.wpvs.de/
-
-    Dieser Quellcode ist lizenziert unter einer
-    Creative Commons Namensnennung 4.0 International Lizenz.
---%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@taglib tagdir="/WEB-INF/tags/templates" prefix="template"%>
@@ -24,9 +15,9 @@
 
     <jsp:attribute name="menu">
         <div class="menuitem">
-            <a href="<c:url value="/app/task/new/"/>">Aufgabe anlegen</a>
+            <a href="<c:url value="/app/anzeigen/edit/"/>">Anzeige anlegen</a>
         </div>
-         <div class="menuitem">
+        <div class="menuitem">
             <a href="<c:url value="/app/user/edit"/>">Benutzerkonto bearbeiten</a>
         </div>
 
@@ -34,11 +25,10 @@
             <a href="<c:url value="/app/categories/"/>">Kategorien bearbeiten</a>
         </div>
     </jsp:attribute>
-
     <jsp:attribute name="content">
         <%-- Suchfilter --%>
         <form method="GET" class="horizontal" id="search">
-            <input type="text" name="search_text" value="${param.search_text}" placeholder="Beschreibung"/>
+            <input type="text" name="search_title" value="${param.search_title}" placeholder="Titel"/>
 
             <select name="search_category">
                 <option value="">Alle Kategorien</option>
@@ -50,12 +40,22 @@
                 </c:forEach>
             </select>
 
-            <select name="search_status">
-                <option value="">Alle Stati</option>
+            <select name="search_anzeige_art">
+                <option value="">Alle Anzeigearten</option>
 
-                <c:forEach items="${statuses}" var="status">
-                    <option value="${status}" ${param.search_status == status ? 'selected' : ''}>
-                        <c:out value="${status.label}"/>
+                <c:forEach items="${anzeige_art}" var="art">
+                    <option value="${art}" ${param.search_anzeige_art == art ? 'selected' : ''}>
+                        <c:out value="${art.label}"/>
+                    </option>
+                </c:forEach>
+            </select>
+
+            <select name="search_preis_art">
+                <option value="">Alle Preisarten</option>
+
+                <c:forEach items="${preis_art}" var="art">
+                    <option value="${art}" ${param.search_preis_art == art ? 'selected' : ''}>
+                        <c:out value="${art.label}"/>
                     </option>
                 </c:forEach>
             </select>
@@ -65,45 +65,52 @@
             </button>
         </form>
 
-        <%-- Gefundene Aufgaben --%>
+        <%-- Gefundene Anzeigen --%>
         <c:choose>
-            <c:when test="${empty tasks}">
+            <c:when test="${empty anzeigen}">
                 <p>
-                    Es wurden keine Aufgaben gefunden. 🐈
+                    Es wurden keine Anzeigen gefunden. 🐈
                 </p>
             </c:when>
             <c:otherwise>
                 <jsp:useBean id="utils" class="dhbwka.wwi.vertsys.javaee.maximarkt.web.WebUtils"/>
-                
+
                 <table>
                     <thead>
                         <tr>
-                            <th>Bezeichnung</th>
+                            <th>Titel</th>
                             <th>Kategorie</th>
                             <th>Eigentümer</th>
-                            <th>Status</th>
-                            <th>Fällig am</th>
+                            <th>Anzeigeart</th>
+                            <th>Preisart</th>
+                            <th>Preis</th>
+                            <th>Datum</th>
                         </tr>
                     </thead>
-                    <c:forEach items="${tasks}" var="task">
+                    <c:forEach items="${anzeigen}" var="anzeige">
                         <tr>
                             <td>
-                                <a href="<c:url value="/app/task/${task.id}/"/>">
-                                    <c:out value="${task.shortText}"/>
+                                <a href="<c:url value="/app/anzeigen/edit/${anzeige.id}/"/>">
+                                    <c:out value="${anzeige.titel}"/>
                                 </a>
                             </td>
                             <td>
-                                <c:out value="${task.category.name}"/>
+                                <c:out value="${anzeige.category.name}"/>
                             </td>
                             <td>
-                                <c:out value="${task.owner.username}"/>
+                                <c:out value="${anzeige.owner.username}"/>
                             </td>
                             <td>
-                                <c:out value="${task.status.label}"/>
+                                <c:out value="${anzeige.art.label}"/>
                             </td>
                             <td>
-                                <c:out value="${utils.formatDate(task.dueDate)}"/>
-                                <c:out value="${utils.formatTime(task.dueTime)}"/>
+                                <c:out value="${anzeige.artDesPreises.label}"/>
+                            </td>
+                            <td>
+                                <c:out value="${anzeige.preis}"/>
+                            </td>
+                            <td>
+                                <c:out value="${utils.formatDate(anzeige.date)}"/>
                             </td>
                         </tr>
                     </c:forEach>

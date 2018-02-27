@@ -44,44 +44,85 @@ public class User implements Serializable {
     @Size(min = 5, max = 64, message = "Der Benutzername muss zwischen fünf und 64 Zeichen lang sein.")
     @NotNull(message = "Der Benutzername darf nicht leer sein.")
     private String username;
-    
+
     public class Password {
+
         @Size(min = 6, max = 64, message = "Das Passwort muss zwischen sechs und 64 Zeichen lang sein.")
         public String password = "";
-    }
+        
+           }
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Tabellen">
     @Transient
     private final Password password = new Password();
-    
-    
-     @Column(name = "VORNMAE", length = 64)
+
+    @Column(name = "VORNMAE", length = 64)
     @Size(min = 5, max = 64, message = "Der Vorname muss zwischen fünf und 64 Zeichen lang sein.")
     private String vorname;
 
-       @Column(name = "NACHNAME", length = 64)
+    @Column(name = "NACHNAME", length = 64)
     @Size(min = 5, max = 64, message = "Der Nachname muss zwischen fünf und 64 Zeichen lang sein.")
     private String nachname;
-       
-         @Column(name = "ANSCHRIFT", length = 64)
+
+    @Column(name = "ANSCHRIFT", length = 64)
     @Size(min = 5, max = 64, message = "Der Anschrift muss zwischen fünf und 64 Zeichen lang sein.")
     private String anschrift;
-         
-         
-           @Column(name = "PLZ", length = 64)
+
+    @Column(name = "PLZ", length = 64)
     @Size(min = 5, max = 64, message = "Der PLZ muss zwischen fünf und 64 Zeichen lang sein.")
     private String plz;
-         
-           @Column(name = "ORT", length = 64)
+
+    @Column(name = "ORT", length = 64)
     @Size(min = 5, max = 64, message = "Der Ort muss zwischen fünf und 64 Zeichen lang sein.")
     private String ort;
-           
-                  @Column(name = "EMAIL", length = 64)
+
+    @Column(name = "EMAIL", length = 64)
     @Size(min = 5, max = 64, message = "Der email muss zwischen fünf und 64 Zeichen lang sein.")
     private String email;
-                  
-                         @Column(name = "TEL", length = 64)
+
+    @Column(name = "TEL", length = 64)
     @Size(min = 5, max = 64, message = "Der Tel muss zwischen fünf und 64 Zeichen lang sein.")
     private String tel;
-     
+
+       
+
+    @Column(name = "PASSWORD_HASH", length = 64)
+    @NotNull(message = "Das Passwort darf nicht leer sein.")
+    private String passwordHash;
+    
+    //</editor-fold>
+
+    @ElementCollection
+    @CollectionTable(
+            name = "MAXIMAKRT_USER_GROUP",
+            joinColumns = @JoinColumn(name = "USERNAME")
+    )
+    @Column(name = "GROUPNAME")
+    List<String> groups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    List<Task> tasks = new ArrayList<>();
+
+    //<editor-fold defaultstate="collapsed" desc="Konstruktoren">
+    public User() {
+    }
+    
+    public User(String username, String password, String vorname, String nachname, String anschrift, String plz, String ort, String email, String tel) {
+        this.username = username;
+        this.password.password = password;
+        this.passwordHash = this.hashPassword(password);
+        this.vorname = vorname;
+        this.nachname = nachname;
+        this.anschrift = anschrift;
+        this.plz = plz;
+        this.ort = ort;
+        this.email = email;
+        this.tel = tel;
+    }
+
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Setter und Getter">
     public String getOrt() {
         return ort;
     }
@@ -138,55 +179,6 @@ public class User implements Serializable {
         this.tel = tel;
     }
 
-    public User(String username,String password, String vorname, String nachname, String anschrift, String plz, String ort, String email, String tel) {
-        this.username = username;
-        this.password.password = password;
-        this.passwordHash = this.hashPassword(password);
-        this.vorname = vorname;
-        this.nachname = nachname;
-        this.anschrift = anschrift;
-        this.plz = plz;
-        this.ort = ort;
-        this.email = email;
-        this.tel = tel;
-    }
-    
-    
-  
-    
-    
-
- 
-    
-    
-     
-    
-    
-    
-
-    @Column(name = "PASSWORD_HASH", length = 64)
-    @NotNull(message = "Das Passwort darf nicht leer sein.")
-    private String passwordHash;
-
-    @ElementCollection
-    @CollectionTable(
-            name = "MAXIMAKRT_USER_GROUP",
-            joinColumns = @JoinColumn(name = "USERNAME")
-    )
-    @Column(name = "GROUPNAME")
-    List<String> groups = new ArrayList<>();
-
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    List<Task> tasks = new ArrayList<>();
-
-    //<editor-fold defaultstate="collapsed" desc="Konstruktoren">
-    public User() {
-    }
-
-    
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Setter und Getter">
     public String getUsername() {
         return username;
     }
@@ -217,7 +209,7 @@ public class User implements Serializable {
         if (password == null) {
             password = "";
         }
-        
+
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -233,10 +225,10 @@ public class User implements Serializable {
      * Berechnet einen Hashwert aus dem übergebenen Passwort und legt ihn im
      * Feld passwordHash ab. Somit wird das Passwort niemals als Klartext
      * gespeichert.
-     * 
+     *
      * Gleichzeitig wird das Passwort im nicht gespeicherten Feld password
-     * abgelegt, um durch die Bean Validation Annotationen überprüft werden
-     * zu können.
+     * abgelegt, um durch die Bean Validation Annotationen überprüft werden zu
+     * können.
      *
      * @param password Neues Passwort
      */
@@ -247,12 +239,13 @@ public class User implements Serializable {
 
     /**
      * Nur für die Validierung bei einer Passwortänderung!
+     *
      * @return Neues, beim Speichern gesetztes Passwort
      */
     public Password getPassword() {
         return this.password;
     }
-    
+
     /**
      * Prüft, ob das übergebene Passwort korrekt ist.
      *
@@ -299,4 +292,12 @@ public class User implements Serializable {
     }
     //</editor-fold>
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof User) {
+            User other = (User)o;
+            return this.username.equals(other.username);
+        }
+        return false;
+    }
 }
