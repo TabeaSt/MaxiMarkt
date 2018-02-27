@@ -51,6 +51,28 @@ public class User implements Serializable {
     }
     @Transient
     private final Password password = new Password();
+    
+    
+     @Column(name = "ORT", length = 64)
+    @Size(min = 5, max = 64, message = "Der Ort muss zwischen fünf und 64 Zeichen lang sein.")
+    private String ort;
+
+    public String getOrt() {
+        return ort;
+    }
+
+    public void setOrt(String ort) {
+        this.ort = ort;
+    }
+
+    public User(String username, String ort, String password) {
+        this.username = username;
+        this.ort = ort;
+     this.password.password = password;
+        this.passwordHash = this.hashPassword(password);
+    }
+    
+    
 
     @Column(name = "PASSWORD_HASH", length = 64)
     @NotNull(message = "Das Passwort darf nicht leer sein.")
@@ -71,11 +93,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password.password = password;
-        this.passwordHash = this.hashPassword(password);
-    }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Setter und Getter">

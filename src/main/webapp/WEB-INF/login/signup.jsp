@@ -61,6 +61,14 @@
                     <div class="side-by-side">
                         <input type="password" name="signup_password2" value="${signup_form.values["signup_password2"][0]}">
                     </div>
+                    
+                    <label for="signup_ort">
+                        Ort:
+                        <span class="required">*</span>
+                    </label>
+                    <div class="side-by-side">
+                        <input type="ort" name="signup_ort" value="${signup_form.values["signup_ort"][0]}">
+                    </div>
 
                     <%-- Button zum Abschicken --%>
                     <div class="side-by-side">
