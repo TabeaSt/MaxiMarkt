@@ -65,6 +65,12 @@ public class AnzeigeEditServlet extends HttpServlet {
         User user = this.userBean.getCurrentUser();
 
         Anzeige anzeige = this.getRequestedAnzeige(request);
+        if (anzeige.getCategory() != null) {
+            request.setAttribute("category_name", anzeige.getCategory().getName());
+        }
+        else {
+            request.setAttribute("category_name", "Keiner Kategorie zugeordnet");
+        }
         
         if (anzeige.getOwner().equals(user)) {
             System.err.println(anzeige.getOwner().getUsername());
